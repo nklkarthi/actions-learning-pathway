@@ -1,4 +1,4 @@
-name: hello-world
+name: run-tests-and-build
 on:
   push:
     branches:
