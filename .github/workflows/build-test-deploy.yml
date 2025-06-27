@@ -37,3 +37,34 @@ jobs:
       - name: Build the application
         run: |
           npm run build
+
+  deploy:
+    needs: build
+    permissions:
+      contents: write
+      id-token: write
+      pages: write
+    environment: 
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: configure github pages
+        uses: actions/configure-pages@v5
+        with:
+          static_site_generator: next
+      - name: Setup Node and Install Dependencies
+        uses: ./.github/actions/setup-node-deps
+      - run: npm run build
+      - name: upload artifacts
+        uses: actions/upload-pages-artifact@v3
+        with: 
+          path: "./out"
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
