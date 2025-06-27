@@ -37,34 +37,31 @@ jobs:
       - name: Build the application
         run: |
           npm run build
-
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-out
+          path: ./out
   deploy:
     needs: build
     permissions:
       contents: write
       id-token: write
       pages: write
-    environment: 
+    environment:
       name: production
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: configure github pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-      - name: Setup Node and Install Dependencies
-        uses: ./.github/actions/setup-node-deps
-      - run: npm run build
+          name: nextjs-out
+          path: ./out
       - name: upload artifacts
         uses: actions/upload-pages-artifact@v3
-        with: 
+        with:
           path: "./out"
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
