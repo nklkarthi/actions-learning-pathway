@@ -1,7 +1,7 @@
-name: 'Setup Node and Install Dependencies'
-description: 'Composite action to checkout code, setup Node.js, cache npm, and install dependencies.'
+name: "Setup Node and Install Dependencies"
+description: "Composite action to checkout code, setup Node.js, cache npm, and install dependencies."
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
