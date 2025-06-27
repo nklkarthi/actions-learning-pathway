@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  run-tests-and-build:
+  install-dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,9 +20,29 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+  test:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Run tests
         run: |
           npm test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Build the application
         run: |
           npm run build
